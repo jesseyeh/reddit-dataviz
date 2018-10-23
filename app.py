@@ -17,6 +17,7 @@ app.secret_key = os.urandom(16)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    success = False
     if request.method == "POST":
         subreddit = sanitize(request.form.get("subreddit"))
         if subreddit=="":
@@ -38,6 +39,8 @@ def index():
             flash("Requested subreddit does not exist.")
             return redirect(url_for("index"))
 
+        success = True
+        
         # Data
         formatted_times = [time.strftime("%H:%M:%S", time.localtime(post.created_utc)) for post in posts]
         hours = [math.floor(epoch2decimal(t)) for t in formatted_times]
@@ -104,6 +107,7 @@ def index():
         script, div = components(p)
 
         return render_template("index.html",
+            success=success,
             subreddit=subreddit,
             limit=limit,
             time_filter=get_time_filter_expression(time_filter),

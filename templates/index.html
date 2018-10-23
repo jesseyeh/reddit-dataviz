@@ -53,11 +53,13 @@
             {% endif %} 
         </div>
 
-        <div class="row pt-5" style="text-align: center">
-            <div class="col-12">
-                <p class="lead my-0">Based on the top {{ limit }} posts{{ time_filter }},<br/>the best time to post to <b>r/{{ subreddit }}</b> is around <b>{{ best_time }}.</b></p>
+        {% if success %}
+            <div class="row pt-5" style="text-align: center">
+                <div class="col-12">
+                    <p class="lead my-0">Based on the top {{ limit }} posts{{ time_filter }},<br/>the best time to post to <b>r/{{ subreddit }}</b> is around <b>{{ best_time }}.</b></p>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 </body>
 
