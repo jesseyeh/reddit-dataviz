@@ -9,11 +9,12 @@ import math
 import os
 import time
 
+import config
 from reddit_data import get_posts, get_time_filter_expression, is_valid_subreddit_name
 from util import epoch2decimal, round_up_by, sanitize
 
 app = Flask(__name__)
-app.secret_key = os.urandom(16)
+app.secret_key = config.secret_key
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -40,7 +41,7 @@ def index():
             return redirect(url_for("index"))
 
         success = True
-        
+
         # Data
         formatted_times = [time.strftime("%H:%M:%S", time.localtime(post.created_utc)) for post in posts]
         hours = [math.floor(epoch2decimal(t)) for t in formatted_times]
