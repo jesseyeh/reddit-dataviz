@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Reddit Data Visualization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    {% if js_resources and css_resources and script and div %}
+        {{ js_resources|indent(4)|safe }}
+        {{ css_resources|indent(4)|safe }}
+        {{ script|indent(4)|safe }}
+    {% endif %}
+</head>
+
+<body>
+    <div class="container" style="max_width:80%">
+        <div class="row justify-content-center">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-warning alert-dismissable my-0 mt-4" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %} 
+        </div>
+
+        <div class="row pt-4" style="text-align: center">
+            <div class="col-12">
+                <p class="lead my-0">When is the best time to post to Reddit?</p>
+            </div>
+        </div>
+    
+        <div class="row justify-content-center">
+            <form class="form-inline py-4" method="post">
+                <p class="my-2 my-sm-0">r/&nbsp;</p>
+                <input class="form-control mr-sm-2" type="search" pattern="^[A-Za-z0-9][A-Za-z0-9_]{1,20}" placeholder="Enter Subreddit Name" aria-label="Search" name="subreddit" value="{{request.form.subreddit}}">
+
+                <input class="btn btn-outline-success" type="submit" value="Search"></input>
+            </form>
+        </div>
+
+        <div class="row justify-content-center">
+            {% if js_resources and css_resources and script and div %}
+                {{ div|indent(4)|safe }}
+            {% endif %} 
+        </div>
+
+        <div class="row pt-5" style="text-align: center">
+            <div class="col-12">
+                <p class="lead my-0">Based on the top {{ limit }} posts{{ time_filter }},<br/>the best time to post to <b>r/{{ subreddit }}</b> is around <b>{{ best_time }}.</b></p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
