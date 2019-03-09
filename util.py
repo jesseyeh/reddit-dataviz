@@ -1,11 +1,13 @@
 import re
 
-def epoch2decimal(time):
-    (h, m, s) = time.split(":")
-    return (int(h) + int(m) / 60 + int(s) / 3600)
+def get_hour(hour):
+    return 12 if hour == 0 or hour == 12 else hour % 12
 
-def round_up_by(num, multiple_to_round_up_by):
-    return ((-num // multiple_to_round_up_by) * -multiple_to_round_up_by) 
+def get_meridiem(hour):
+    return "am" if 0 <= hour < 12 else "pm"
+
+def get_12_hour_time(hour):
+    return f"{get_hour(hour)} {get_meridiem(hour)}"
 
 def sanitize(name, pattern=r"[^\w]", repl=""):
     # Check for characters that are neither alphanumeric nor an underscore
