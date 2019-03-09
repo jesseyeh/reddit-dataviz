@@ -1,7 +1,7 @@
 import praw
 import re
 
-import config
+import config 
 
 def get_reddit_instance():
     return praw.Reddit(client_id=config.client_id,
@@ -23,15 +23,3 @@ def is_valid_subreddit_name(subreddit_name):
     if match:
         return True
     return False
-
-def get_time_filter_expression(time_filter):
-    if time_filter=="all":
-        return " of all time"
-    elif time_filter=="day":
-        return " of the past 24 hours"
-    elif time_filter=="hour":
-        return " of the past hour"
-    elif time_filter=="week":
-        return " of the past week"
-    else:
-        return " of the past year"
