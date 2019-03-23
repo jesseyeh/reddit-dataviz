@@ -55,8 +55,6 @@ def index():
         valcounts_df = pd.DataFrame(df["hour"].value_counts().reset_index())
         valcounts_df.columns = ["hour", "count"]
 
-        best_time = valcounts_df["hour"].iloc[0]
-
         chron_df = valcounts_df.sort_values(by=["hour"])
 
         valcounts_data = valcounts_df.to_dict(orient="records")
@@ -71,7 +69,6 @@ def index():
             time_ranges=constants.TIME_RANGES.keys(),
             limit=min(limit, valcounts_df["count"].sum()),
             time_range_expression=constants.TIME_RANGE_EXPRESSIONS[time_range],
-            best_time=best_time,
             valcounts_data=valcounts_data,
             valcounts_title="r/" + subreddit + " " + constants.VALCOUNTS_TITLE,
             chron_data=chron_data,
