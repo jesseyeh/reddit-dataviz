@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import time
 
-import config 
+import config
 import constants
 from reddit_data import get_posts, is_valid_subreddit_name
 from util import get_12_hour_time, sanitize
@@ -50,15 +50,14 @@ def index():
 
         # Data
         df = pd.DataFrame({"id": [post.id for post in posts],
-                           "hour": [get_12_hour_time(int(time.strftime("%H", time.localtime(post.created_utc)))) for post in posts]})
+                           "hour": [(pd.to_datetime(post.created_utc, unit="s").hour) for post in posts]})
 
         valcounts_df = pd.DataFrame(df["hour"].value_counts().reset_index())
         valcounts_df.columns = ["hour", "count"]
 
-        best_time = valcounts_df['hour'].iloc[0]
+        best_time = valcounts_df["hour"].iloc[0]
 
-        # https://stackoverflow.com/questions/42964088/pandas-sort-dataframe-by-date-string-without-converting
-        chron_df = valcounts_df.iloc[pd.to_datetime(valcounts_df["hour"], format="%I %p").values.argsort()]
+        chron_df = valcounts_df.sort_values(by=["hour"])
 
         valcounts_data = valcounts_df.to_dict(orient="records")
         chron_data = chron_df.to_dict(orient="records")
@@ -85,4 +84,4 @@ def index():
         time_ranges=constants.TIME_RANGES.keys())
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
