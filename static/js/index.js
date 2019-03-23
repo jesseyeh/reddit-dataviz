@@ -11,6 +11,8 @@ const svgHeight = 600;
 const graphWidth = svgWidth - margin.left - margin.right;
 const graphHeight = svgHeight - margin.top - margin.bottom;
 
+const timezoneOffset = new Date().getTimezoneOffset() / 60;
+
 var xScale = d3.scaleLinear()
     .range([0, graphWidth])
 
@@ -67,6 +69,19 @@ function wrap(text, width) {
     });
 }
 
+function getHour(hour) {
+    return (hour % 12 == 0) ? 12 : hour % 12;
+}
+
+function getMeridiem(hour) {
+    return (0 <= hour && hour < 12) ? "am" : "pm";
+}
+
+function getTime(hour, offset=0) {
+    var localHour = (hour - offset + 24) % 24;
+    return `${ getHour(localHour) } ${ getMeridiem(localHour) }`;
+}
+
 function drawChart(chart, svg, colors) {
     data = chart.data;
     title = chart.title;
@@ -88,7 +103,8 @@ function drawChart(chart, svg, colors) {
     // Draw y-axis
     svg.append("g")
         .attr("class", "yaxis")
-        .call(d3.axisLeft(yScale));
+        .call(d3.axisLeft(yScale)
+            .tickFormat(function(d) { return getTime(d, timezoneOffset); }));
 
     // Draw horizontal grid lines
     svg.append("g")
@@ -173,7 +189,8 @@ function resize(container, chart) {
 
     // Update y-axis label
     container.select(".yaxis")
-        .call(d3.axisLeft(yScale));
+        .call(d3.axisLeft(yScale)
+            .tickFormat(function(d) { return getTime(d, timezoneOffset); }));
 
     // Update horizontal grid lines
     container.select(".xgrid")
