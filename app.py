@@ -1,3 +1,4 @@
+import datetime
 from flask import flash, Flask, redirect, render_template, request, url_for
 import pandas as pd
 import os
@@ -48,8 +49,9 @@ def index():
         success = True
 
         # Data
+        timezone = datetime.datetime.now().astimezone().tzinfo
         df = pd.DataFrame({"id": [post.id for post in posts],
-                           "hour": [get_12_hour_time(pd.to_datetime(post.created_utc, unit="s").hour) for post in posts]})
+                           "hour": [get_12_hour_time(pd.to_datetime(post.created_utc, utc=True, unit="s").tz_convert(timezone).hour) for post in posts]})
 
         valcounts_df = pd.DataFrame(df["hour"].value_counts().reset_index())
         valcounts_df.columns = ["hour", "count"]
@@ -84,4 +86,4 @@ def index():
         time_ranges=constants.TIME_RANGES.keys())
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
